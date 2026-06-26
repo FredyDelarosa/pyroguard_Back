@@ -5,7 +5,7 @@ from infrastructure.database.postgres.models import Intervencion
 
 class IntervencionRepository(ABC):
     @abstractmethod
-    def create(self, intervencion_in: IntervencionCreate, id_brigada: str) -> Intervencion: pass
+    def create(self, intervencion_in: IntervencionCreate) -> Intervencion: pass
     @abstractmethod
     def update(self, id_intervencion: str, update_data: IntervencionUpdate) -> Optional[Intervencion]: pass
     @abstractmethod

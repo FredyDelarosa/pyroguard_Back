@@ -42,7 +42,7 @@ def asignar_miembro_brigada(
 
 @router.post("/intervenciones", response_model=IntervencionResponse)
 def crear_intervencion(intervencion_in: IntervencionCreate, usecase: IntervencionUseCase = Depends(get_intervencion_usecase), current_user: Usuario = Depends(require_role(["Admin", "Coordinador"]))):
-    return usecase.crear(intervencion_in, str(current_user.id_usuario))
+    return usecase.crear(intervencion_in)
 
 @router.put("/intervenciones/{id_intervencion}", response_model=IntervencionResponse)
 def actualizar_intervencion(id_intervencion: str, intervencion_in: IntervencionUpdate, usecase: IntervencionUseCase = Depends(get_intervencion_usecase), current_user: Usuario = Depends(require_role(["Admin", "Coordinador", "Brigadista"]))):

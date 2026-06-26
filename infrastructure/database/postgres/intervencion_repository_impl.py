@@ -7,11 +7,12 @@ from infrastructure.database.postgres.models import Intervencion
 
 class IntervencionRepositoryImpl(IntervencionRepository):
     def __init__(self, db: Session): self.db = db
-    def create(self, intervencion_in: IntervencionCreate, id_brigada: str) -> Intervencion:
+    def create(self, intervencion_in: IntervencionCreate) -> Intervencion:
         nueva = Intervencion(
             id_zona=intervencion_in.id_zona,
-            id_brigada=id_brigada,
-            estrategia_asignada=intervencion_in.estrategia_asignada
+            id_brigada=intervencion_in.id_brigada,
+            estado=intervencion_in.estado,
+            observaciones=intervencion_in.observaciones
         )
         self.db.add(nueva)
         self.db.commit()
