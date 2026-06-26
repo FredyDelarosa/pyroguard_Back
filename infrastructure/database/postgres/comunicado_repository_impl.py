@@ -10,16 +10,15 @@ class ComunicadoRepositoryImpl(ComunicadoRepository):
         self.db = db
         
     def get_activos(self) -> List[Comunicado]:
-        return self.db.query(Comunicado).filter(Comunicado.fecha_vigencia > func.now()).order_by(Comunicado.creado_en.desc()).all()
+        return self.db.query(Comunicado).filter(Comunicado.fecha_vigencia > func.now()).order_by(Comunicado.fecha_publicacion.desc()).all()
         
     def get_all(self) -> List[Comunicado]:
-        return self.db.query(Comunicado).order_by(Comunicado.creado_en.desc()).all()
+        return self.db.query(Comunicado).order_by(Comunicado.fecha_publicacion.desc()).all()
         
     def create(self, comunicado_in: ComunicadoCreate, id_autor: str) -> Comunicado:
         nuevo_comunicado = Comunicado(
             titulo=comunicado_in.titulo,
             contenido=comunicado_in.contenido,
-            zonas_aplica=",".join(comunicado_in.zonas_aplica) if comunicado_in.zonas_aplica else "Todas",
             fecha_vigencia=comunicado_in.fecha_vigencia,
             id_autor=id_autor
         )
