@@ -37,8 +37,9 @@ app.include_router(operaciones.router, prefix="/api/v1/operaciones", tags=["Oper
 app.include_router(ciudadano.router, prefix="/api/v1/ciudadano", tags=["Portal Ciudadano (Reportes Públicos)"])
 app.include_router(comunicados.router, prefix="/api/v1/comunicados", tags=["Comunicados Oficiales"])
 
-from infrastructure.http.router import reportes
+from infrastructure.http.router import reportes, observaciones
 app.include_router(reportes.router, prefix="/api/v1/reportes", tags=["Reportes Técnicos Automatizados"])
+app.include_router(observaciones.router, prefix="/api/v1/observaciones", tags=["Observaciones en Campo (Brigadistas)"])
 
 @app.get("/")
 def health_check():

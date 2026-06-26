@@ -90,3 +90,18 @@ class ReporteTecnico(Base):
     creado_en = Column(DateTime, default=func.now())
     
     coordinador = relationship("Usuario")
+
+class ObservacionCampo(Base):
+    __tablename__ = "observaciones_campo"
+    
+    id_observacion = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id_brigadista = Column(UUID(as_uuid=True), ForeignKey('usuarios.id_usuario', ondelete="SET NULL"))
+    id_zona = Column(UUID(as_uuid=True), nullable=False) # Referencia a zona en ML
+    latitud = Column(Float, nullable=False)
+    longitud = Column(Float, nullable=False)
+    condiciones = Column(String(100), nullable=False) # e.g., Favorable, Peligro, Inaccesible
+    recursos_necesarios = Column(String(255))
+    observaciones_texto = Column(Text)
+    creado_en = Column(DateTime, default=func.now())
+    
+    brigadista = relationship("Usuario")

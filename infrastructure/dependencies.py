@@ -38,3 +38,8 @@ from infrastructure.database.postgres.reporte_tecnico_repository_impl import Rep
 from application.usecase.reporte_tecnico_usecase import ReporteTecnicoUseCase
 def get_reporte_tecnico_repository(db: Session = Depends(get_db)) -> ReporteTecnicoRepositoryImpl: return ReporteTecnicoRepositoryImpl(db)
 def get_reporte_tecnico_usecase(repo: ReporteTecnicoRepositoryImpl = Depends(get_reporte_tecnico_repository)) -> ReporteTecnicoUseCase: return ReporteTecnicoUseCase(repo)
+
+from infrastructure.database.postgres.observacion_repository_impl import ObservacionRepositoryImpl
+from application.usecase.observacion_usecase import ObservacionUseCase
+def get_observacion_repository(db: Session = Depends(get_db)) -> ObservacionRepositoryImpl: return ObservacionRepositoryImpl(db)
+def get_observacion_usecase(repo: ObservacionRepositoryImpl = Depends(get_observacion_repository)) -> ObservacionUseCase: return ObservacionUseCase(repo)
