@@ -6,7 +6,9 @@ from core.middleware.rate_limiter import setup_rate_limiter
 app = FastAPI(
     title="PyroGuard AI - Backend Operativo",
     description="Microservicio Principal para la gestión de Brigadas, Usuarios y Reportes. (Arquitectura Hexagonal/Clean)",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json"
 )
 
 # Configurar Limiter Global
