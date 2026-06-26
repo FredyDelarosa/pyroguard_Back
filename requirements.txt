@@ -9,3 +9,4 @@ pydantic-settings
 slowapi
 httpx
 fpdf2
+python-multipart

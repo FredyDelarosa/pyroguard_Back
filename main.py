@@ -37,9 +37,17 @@ app.include_router(operaciones.router, prefix="/api/v1/operaciones", tags=["Oper
 app.include_router(ciudadano.router, prefix="/api/v1/ciudadano", tags=["Portal Ciudadano (Reportes Públicos)"])
 app.include_router(comunicados.router, prefix="/api/v1/comunicados", tags=["Comunicados Oficiales"])
 
-from infrastructure.http.router import reportes, observaciones
+from infrastructure.http.router import reportes, observaciones, archivos
+from fastapi.staticfiles import StaticFiles
+import os
+
+# Asegurar que la carpeta exista antes de montar (evita errores de FastAPI)
+os.makedirs("uploads", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 app.include_router(reportes.router, prefix="/api/v1/reportes", tags=["Reportes Técnicos Automatizados"])
 app.include_router(observaciones.router, prefix="/api/v1/observaciones", tags=["Observaciones en Campo (Brigadistas)"])
+app.include_router(archivos.router, prefix="/api/v1/archivos", tags=["Subida de Archivos e Imágenes"])
 
 @app.get("/")
 def health_check():
