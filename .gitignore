@@ -1,0 +1,31 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Variables de entorno / Secretos
+.env
+.env.local
+.env.*
+!.env.example
+
+# Archivos de la base de datos local (SQLite, si existiera alguna vez)
+*.db
+*.sqlite3
+*.sql
+
+# Almacenamiento de archivos (Los PDF generados no van a Git)
+storage/reportes_pdf/*
+!storage/reportes_pdf/.gitkeep
+
+# IDEs
+.idea/
+.vscode/
+*.swp

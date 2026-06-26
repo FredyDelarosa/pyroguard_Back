@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Entornos virtuales locales
+.venv
+venv
+env
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Variables de entorno locales (Evitar inyectar secretos de desarrollo a la imagen)
+.env
+.env.local
+
+# Archivos de despliegue
+Dockerfile
+docker-compose.yml
+
+# IDEs
+.idea
+.vscode
+
+# Tests
+.pytest_cache
+tests/
