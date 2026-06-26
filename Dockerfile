@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el código fuente
 COPY . .
 
-# Crear el directorio de almacenamiento local para PDFs con permisos
-RUN mkdir -p /app/storage/reportes_pdf && chown -R appuser:appuser /app/storage
+# Crear el directorio de almacenamiento local para PDFs e imágenes con permisos
+RUN mkdir -p /app/storage/reportes_pdf /app/uploads && chown -R appuser:appuser /app/storage /app/uploads
 
 # Cambiar al usuario sin privilegios
 USER appuser
