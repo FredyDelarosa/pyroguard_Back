@@ -8,3 +8,5 @@ class ReporteCiudadanoRepository(ABC):
     def create(self, reporte_in: ReporteCiudadanoCreate) -> ReporteCiudadano: pass
     @abstractmethod
     def get_all(self) -> List[ReporteCiudadano]: pass
+    @abstractmethod
+    def update_estado(self, id_reporte: str, nuevo_estado: str) -> ReporteCiudadano: pass

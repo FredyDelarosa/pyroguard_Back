@@ -18,6 +18,13 @@ def crear_reporte(request: Request, reporte_in: ReporteCiudadanoCreate, usecase:
 def listar_reportes(usecase: ReporteCiudadanoUseCase = Depends(get_reporte_ciudadano_usecase), current_user = Depends(require_role(["Admin", "Coordinador"]))):
     return usecase.listar()
 
+from domain.model.reporte import ReporteCiudadanoUpdate
+@router.put("/reportes/{id_reporte}/estado", response_model=ReporteCiudadanoResponse)
+def actualizar_estado_reporte(id_reporte: str, update_in: ReporteCiudadanoUpdate, usecase: ReporteCiudadanoUseCase = Depends(get_reporte_ciudadano_usecase), current_user = Depends(require_role(["Admin", "Coordinador"]))):
+    res = usecase.update_estado(id_reporte, update_in.estado)
+    if not res: raise HTTPException(status_code=404, detail="Reporte no encontrado")
+    return res
+
 @router.get("/clima/{id_zona}")
 async def consultar_clima_ciudadano(id_zona: str):
     ml_client = MLServiceClient()
