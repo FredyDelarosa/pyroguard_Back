@@ -10,8 +10,8 @@ class UsuarioUseCase:
     def __init__(self, repository: UsuarioRepository):
         self.repository = repository
         
-    def obtener_todos_los_usuarios(self) -> List[Usuario]:
-        return self.repository.get_all()
+    def obtener_todos_los_usuarios(self, rol: Optional[str] = None) -> List[Usuario]:
+        return self.repository.get_all(rol)
         
     def modificar_usuario(self, id_usuario: str, update_data: UsuarioUpdate) -> Optional[Usuario]:
         # Aquí se podrían añadir validaciones de negocio complejas antes de guardar

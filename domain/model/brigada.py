@@ -7,6 +7,9 @@ class BrigadaCreate(BaseModel):
     nombre: str
     id_coordinador: Optional[UUID] = None
 
+class BrigadaAssignMember(BaseModel):
+    id_brigadista: UUID
+
 class BrigadaResponse(BaseModel):
     id_brigada: UUID
     nombre: str

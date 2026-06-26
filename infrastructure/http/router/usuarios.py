@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from core.db.connection import get_db
 from infrastructure.database.postgres.models import Usuario
@@ -23,13 +23,15 @@ def get_usuario_usecase(db: Session = Depends(get_db)) -> UsuarioUseCase:
 
 @router.get("/", response_model=List[UsuarioResponse])
 def listar_usuarios(
+    rol: Optional[str] = None,
     usecase: UsuarioUseCase = Depends(get_usuario_usecase),
-    current_user: Usuario = Depends(require_role(["Admin"]))
+    current_user: Usuario = Depends(require_role(["Admin", "Coordinador"]))
 ):
     """
-    Lista todos los usuarios usando Clean Architecture.
+    Lista todos los usuarios, con opción de filtrar por rol.
+    Accesible por Admins y Coordinadores (para asignar brigadistas).
     """
-    return usecase.obtener_todos_los_usuarios()
+    return usecase.obtener_todos_los_usuarios(rol)
 
 @router.put("/{id_usuario}", response_model=UsuarioResponse)
 def actualizar_usuario(

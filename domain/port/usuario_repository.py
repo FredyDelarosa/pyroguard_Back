@@ -5,7 +5,7 @@ from infrastructure.database.postgres.models import Usuario
 
 class UsuarioRepository(ABC):
     @abstractmethod
-    def get_all(self) -> List[Usuario]:
+    def get_all(self, rol: Optional[str] = None) -> List[Usuario]:
         pass
         
     @abstractmethod

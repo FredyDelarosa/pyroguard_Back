@@ -8,8 +8,11 @@ class UsuarioRepositoryImpl(UsuarioRepository):
     def __init__(self, db: Session):
         self.db = db
         
-    def get_all(self) -> List[Usuario]:
-        return self.db.query(Usuario).all()
+    def get_all(self, rol: Optional[str] = None) -> List[Usuario]:
+        query = self.db.query(Usuario)
+        if rol:
+            query = query.filter(Usuario.rol == rol)
+        return query.all()
         
     def get_by_id(self, id_usuario: str) -> Optional[Usuario]:
         return self.db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()

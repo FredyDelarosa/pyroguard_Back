@@ -43,3 +43,8 @@ from infrastructure.database.postgres.observacion_repository_impl import Observa
 from application.usecase.observacion_usecase import ObservacionUseCase
 def get_observacion_repository(db: Session = Depends(get_db)) -> ObservacionRepositoryImpl: return ObservacionRepositoryImpl(db)
 def get_observacion_usecase(repo: ObservacionRepositoryImpl = Depends(get_observacion_repository)) -> ObservacionUseCase: return ObservacionUseCase(repo)
+
+from infrastructure.database.postgres.brigada_repository_impl import BrigadaRepositoryImpl
+from application.usecase.brigada_usecase import BrigadaUseCase
+def get_brigada_repository(db: Session = Depends(get_db)) -> BrigadaRepositoryImpl: return BrigadaRepositoryImpl(db)
+def get_brigada_usecase(repo: BrigadaRepositoryImpl = Depends(get_brigada_repository)) -> BrigadaUseCase: return BrigadaUseCase(repo)
