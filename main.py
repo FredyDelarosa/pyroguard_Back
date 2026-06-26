@@ -11,6 +11,12 @@ app = FastAPI(
     openapi_url="/api/openapi.json"
 )
 
+from core.db.connection import engine
+from infrastructure.database.postgres.models import Base
+
+# Crear las tablas en la BD si no existen
+Base.metadata.create_all(bind=engine)
+
 # Configurar Limiter Global
 setup_rate_limiter(app)
 
