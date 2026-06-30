@@ -10,10 +10,13 @@ class AuthUseCase:
     def autenticar_usuario(self, email, password):
         usuario = next((u for u in self.usuario_repo.get_all() if u.email == email), None)
         if not usuario or not verify_password(password, usuario.password_hash):
-            return None
+            return None, None
         if not usuario.activo:
-            return "INACTIVO"
-        return create_access_token(data={"sub": str(usuario.id_usuario)})
+            return "INACTIVO", None
+        
+        # Inyectando rol en el payload según Security Guidelines (no PII, solo UUIDs y roles)
+        token_payload = {"sub": str(usuario.id_usuario), "rol": usuario.rol}
+        return create_access_token(data=token_payload), usuario
 
     def registrar_usuario(self, usuario_in: UsuarioCreate):
         existente = next((u for u in self.usuario_repo.get_all() if u.email == usuario_in.email), None)
