@@ -19,6 +19,7 @@ brigadistas_brigada = Table(
 
 class Usuario(Base):
     __tablename__ = "usuarios"
+    __encrypted_fields__ = ["nombre"]
     
     id_usuario = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nombre = Column(String(255), nullable=False)
@@ -58,6 +59,7 @@ class Intervencion(Base):
 
 class ReporteCiudadano(Base):
     __tablename__ = "reportes_ciudadanos"
+    __encrypted_fields__ = ["descripcion"]
     
     id_reporte = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     descripcion = Column(Text, nullable=False)

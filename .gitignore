@@ -29,3 +29,6 @@ storage/reportes_pdf/*
 .idea/
 .vscode/
 *.swp
+
+*.md
+/docs/

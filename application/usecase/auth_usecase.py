@@ -2,6 +2,7 @@ from domain.port.usuario_repository import UsuarioRepository
 from core.middleware.auth import verify_password, get_password_hash, create_access_token
 from domain.model.usuario import UsuarioCreate
 from infrastructure.database.postgres.models import Usuario
+from core.security import persistence_interceptor
 
 class AuthUseCase:
     def __init__(self, usuario_repo: UsuarioRepository):
@@ -29,7 +30,8 @@ class AuthUseCase:
             password_hash=get_password_hash(usuario_in.password),
             rol=usuario_in.rol
         )
+        nuevo_usuario = persistence_interceptor.prepare_for_write(nuevo_usuario)
         self.usuario_repo.db.add(nuevo_usuario)
         self.usuario_repo.db.commit()
         self.usuario_repo.db.refresh(nuevo_usuario)
-        return nuevo_usuario
+        return persistence_interceptor.materialize_from_read(nuevo_usuario)
