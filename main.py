@@ -1,60 +1,66 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from infrastructure.http.router import auth, operaciones, ciudadano, comunicados, usuarios
 from core.middleware.rate_limiter import setup_rate_limiter
+from core.db.connection import engine, Base
 
-app = FastAPI(
-    title="PyroGuard AI - Backend Operativo",
-    description="Microservicio Principal para la gestión de Brigadas, Usuarios y Reportes. (Arquitectura Hexagonal/Clean)",
-    version="1.0.0",
-    docs_url="/api/docs",
-    openapi_url="/api/openapi.json"
-)
-
-from core.db.connection import engine
-from infrastructure.database.postgres.models import Base
+# Importar TODOS los modelos para que SQLAlchemy (Base) los registre
+from features.brigadas.infrastructure.models import BrigadaModel, BrigadistaBrigadaModel
+from features.comunicados.infrastructure.models import ComunicadoModel
+from features.intervenciones.infrastructure.models import IntervencionModel
+from features.observaciones.infrastructure.models import ObservacionCampoModel
+from features.reportes_ciudadanos.infrastructure.models import ReporteCiudadanoModel
+from features.reportes_tecnicos.infrastructure.models import ReporteTecnicoModel
 
 # Crear las tablas en la BD si no existen
 Base.metadata.create_all(bind=engine)
 
-# Configurar Limiter Global
-setup_rate_limiter(app)
+# Importar los nuevos Routers Modulares
+from features.brigadas.infrastructure.routers import router as brigadas_router
+from features.comunicados.infrastructure.routers import router as comunicados_router
+from features.intervenciones.infrastructure.routers import router as intervenciones_router
+from features.observaciones.infrastructure.routers import router as observaciones_router
+from features.reportes_ciudadanos.infrastructure.routers import router as reportes_ciudadanos_router
+from features.reportes_tecnicos.infrastructure.routers import router as reportes_tecnicos_router
+from core.routers import archivos
 
-# Configuración de CORS estricta basada en SECURITY_GUIDELINES.md
-# En producción, esto debe restringirse solo a los dominios del Frontend Oficial.
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # TODO: Cambiar en producción por la lista blanca exacta.
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["*"],
-)
-
-# Registrar Rutas
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["Autenticación de Usuarios"])
-app.include_router(usuarios.router, prefix="/api/v1/usuarios", tags=["Gestión de Usuarios (Admin)"])
-app.include_router(operaciones.router, prefix="/api/v1/operaciones", tags=["Operaciones en Campo (Brigadas y Riesgo)"])
-app.include_router(ciudadano.router, prefix="/api/v1/ciudadano", tags=["Portal Ciudadano (Reportes Públicos)"])
-app.include_router(comunicados.router, prefix="/api/v1/comunicados", tags=["Comunicados Oficiales"])
-
-from infrastructure.http.router import reportes, observaciones, archivos
 from fastapi.staticfiles import StaticFiles
 import os
 
-# Asegurar que la carpeta exista antes de montar (evita errores de FastAPI)
+app = FastAPI(
+    title="PyroGuard AI - Backend Operativo (Monolito Modular)",
+    description="Microservicio Core con Arquitectura Hexagonal por Features, completamente desacoplado de Auth y Crypto.",
+    version="2.0.0",
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json"
+)
+
+setup_rate_limiter(app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Registrar Rutas Modulares
+# Para facilitar la migración del front, enrutamos todo bajo /api/v1
+app.include_router(brigadas_router, prefix="/v1")
+app.include_router(comunicados_router, prefix="/v1")
+app.include_router(intervenciones_router, prefix="/v1")
+app.include_router(observaciones_router, prefix="/v1")
+app.include_router(reportes_ciudadanos_router, prefix="/v1")
+app.include_router(reportes_tecnicos_router, prefix="/v1")
+app.include_router(archivos.router, prefix="/api/v1/archivos", tags=["Subida de Archivos"])
+
 os.makedirs("uploads", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-app.include_router(reportes.router, prefix="/api/v1/reportes", tags=["Reportes Técnicos Automatizados"])
-app.include_router(observaciones.router, prefix="/api/v1/observaciones", tags=["Observaciones en Campo (Brigadistas)"])
-app.include_router(archivos.router, prefix="/api/v1/archivos", tags=["Subida de Archivos e Imágenes"])
-
 @app.get("/")
 def health_check():
-    """Endpoint público sin autenticación para comprobar que el servidor está vivo."""
-    return {"status": "Backend Operativo Online"}
+    return {"status": "Backend Operativo Modular Online"}
 
 if __name__ == "__main__":
     import uvicorn
-    # Servidor correrá en puerto 8001 para no chocar con el ML_Service (puerto 8000)
     uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
