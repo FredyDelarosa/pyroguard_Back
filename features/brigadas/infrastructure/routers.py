@@ -8,7 +8,7 @@ from features.brigadas.domain.entities import BrigadaCreate, BrigadaResponse, Br
 from features.brigadas.infrastructure.repositories import BrigadaRepositoryImpl
 from features.brigadas.application.usecases import BrigadaUseCase
 
-router = APIRouter(prefix="/api", tags=["Brigadas (Modular)"])
+router = APIRouter(tags=["Brigadas (Modular)"])
 
 def get_brigada_usecase(db: Session = Depends(get_db)):
     repo = BrigadaRepositoryImpl(db)

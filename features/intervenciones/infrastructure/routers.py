@@ -7,7 +7,7 @@ from features.intervenciones.domain.entities import IntervencionCreate, Interven
 from features.intervenciones.infrastructure.repositories import IntervencionRepositoryImpl
 from features.intervenciones.application.usecases import IntervencionUseCase
 
-router = APIRouter(prefix="/api", tags=["Intervenciones (Modular)"])
+router = APIRouter(tags=["Intervenciones (Modular)"])
 def get_usecase(db: Session = Depends(get_db)): return IntervencionUseCase(IntervencionRepositoryImpl(db))
 
 @router.post("/intervenciones", response_model=IntervencionResponse)

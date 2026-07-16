@@ -9,7 +9,7 @@ from features.reportes_ciudadanos.infrastructure.repositories import ReporteCiud
 from features.reportes_ciudadanos.application.usecases import ReporteCiudadanoUseCase
 from core.utils.ml_client import MLServiceClient
 
-router = APIRouter(prefix="/api", tags=["Reportes Ciudadanos (Modular)"])
+router = APIRouter(tags=["Reportes Ciudadanos (Modular)"])
 
 def get_usecase(db: Session = Depends(get_db)):
     return ReporteCiudadanoUseCase(ReporteCiudadanoRepositoryImpl(db))
