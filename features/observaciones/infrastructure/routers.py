@@ -7,7 +7,7 @@ from features.observaciones.domain.entities import ObservacionCampoCreate, Obser
 from features.observaciones.infrastructure.repositories import ObservacionRepositoryImpl
 from features.observaciones.application.usecases import ObservacionUseCase
 
-router = APIRouter(prefix="/api", tags=["Observaciones (Modular)"])
+router = APIRouter(tags=["Observaciones (Modular)"])
 def get_usecase(db: Session = Depends(get_db)): return ObservacionUseCase(ObservacionRepositoryImpl(db))
 
 @router.post("/observaciones", response_model=ObservacionCampoResponse)

@@ -7,7 +7,7 @@ from features.reportes_tecnicos.domain.entities import ReporteTecnicoCreate, Rep
 from features.reportes_tecnicos.infrastructure.repositories import ReporteTecnicoRepositoryImpl
 from features.reportes_tecnicos.application.usecases import ReporteTecnicoUseCase
 
-router = APIRouter(prefix="/api", tags=["Reportes Tecnicos (Modular)"])
+router = APIRouter(tags=["Reportes Tecnicos (Modular)"])
 def get_usecase(db: Session = Depends(get_db)): return ReporteTecnicoUseCase(ReporteTecnicoRepositoryImpl(db))
 
 @router.post("/reportes_tecnicos", response_model=ReporteTecnicoResponse)

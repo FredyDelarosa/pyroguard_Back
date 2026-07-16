@@ -7,7 +7,7 @@ from features.comunicados.domain.entities import ComunicadoCreate, ComunicadoRes
 from features.comunicados.infrastructure.repositories import ComunicadoRepositoryImpl
 from features.comunicados.application.usecases import ComunicadoUseCase
 
-router = APIRouter(prefix="/api", tags=["Comunicados (Modular)"])
+router = APIRouter(tags=["Comunicados (Modular)"])
 def get_usecase(db: Session = Depends(get_db)): return ComunicadoUseCase(ComunicadoRepositoryImpl(db))
 
 @router.post("/comunicados", response_model=ComunicadoResponse)
