@@ -8,5 +8,6 @@ python-jose[cryptography]
 pydantic-settings
 slowapi
 httpx
+requests
 fpdf2
 python-multipart
