@@ -46,12 +46,12 @@ app.add_middleware(
 
 # Registrar Rutas Modulares
 # Para facilitar la migración del front, enrutamos todo bajo /api/v1
-app.include_router(brigadas_router, prefix="/v1")
-app.include_router(comunicados_router, prefix="/v1")
-app.include_router(intervenciones_router, prefix="/v1")
-app.include_router(observaciones_router, prefix="/v1")
-app.include_router(reportes_ciudadanos_router, prefix="/v1")
-app.include_router(reportes_tecnicos_router, prefix="/v1")
+app.include_router(brigadas_router, prefix="/api/v1")
+app.include_router(comunicados_router, prefix="/api/v1")
+app.include_router(intervenciones_router, prefix="/api/v1")
+app.include_router(observaciones_router, prefix="/api/v1")
+app.include_router(reportes_ciudadanos_router, prefix="/api/v1")
+app.include_router(reportes_tecnicos_router, prefix="/api/v1")
 app.include_router(archivos.router, prefix="/api/v1/archivos", tags=["Subida de Archivos"])
 
 os.makedirs("uploads", exist_ok=True)
