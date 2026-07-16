@@ -34,20 +34,22 @@ class BrigadaUseCase:
 
     def _build_response(self, model) -> BrigadaResponse:
         coordinador_nombre = None
-        if model.id_coordinador:
+        id_coord_str = str(model.id_coordinador) if model.id_coordinador else None
+        
+        if id_coord_str:
             try:
-                user_info = auth_client.get_user_info(model.id_coordinador)
+                user_info = auth_client.get_user_info(id_coord_str)
                 if user_info:
                     coordinador_nombre = user_info.get("nombre")
             except Exception:
                 pass
                 
-        brigadistas_ids = [rel.id_usuario for rel in getattr(model, 'brigadistas_rel', [])]
+        brigadistas_ids = [str(rel.id_usuario) for rel in getattr(model, 'brigadistas_rel', [])]
                 
         return BrigadaResponse(
-            id_brigada=model.id_brigada,
+            id_brigada=str(model.id_brigada),
             nombre=model.nombre,
-            id_coordinador=model.id_coordinador,
+            id_coordinador=id_coord_str,
             coordinador_nombre=coordinador_nombre,
             activa=model.activa,
             creado_en=model.creado_en,
