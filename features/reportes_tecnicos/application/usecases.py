@@ -55,42 +55,48 @@ class ReporteTecnicoUseCase:
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("helvetica", "B", 16)
-        pdf.cell(0, 10, "Reporte Tecnico de Proteccion Civil", ln=True, align='C')
+        
+        # Helper interno para evitar caídas por acentos o comillas tipográficas del LLM
+        def safe_text(texto):
+            if not texto: return ""
+            return str(texto).encode('latin-1', 'replace').decode('latin-1')
+
+        pdf.cell(0, 10, safe_text("Reporte Técnico de Protección Civil"), ln=True, align='C')
         
         pdf.set_font("helvetica", "", 10)
-        pdf.cell(0, 10, f"Fecha de Emision: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True, align='R')
+        pdf.cell(0, 10, safe_text(f"Fecha de Emisión: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"), ln=True, align='R')
         pdf.ln(10)
         
         # Resumen Ejecutivo
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, "Resumen Ejecutivo", ln=True)
+        pdf.cell(0, 10, safe_text("Resumen Ejecutivo"), ln=True)
         pdf.set_font("helvetica", "", 10)
-        pdf.multi_cell(0, 8, reporte.resumen_ejecutivo)
+        pdf.multi_cell(0, 8, safe_text(reporte.resumen_ejecutivo))
         pdf.ln(5)
         
         # Análisis de Riesgo
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, "Analisis de Riesgo", ln=True)
+        pdf.cell(0, 10, safe_text("Análisis de Riesgo"), ln=True)
         pdf.set_font("helvetica", "", 10)
-        pdf.multi_cell(0, 8, reporte.analisis_de_riesgo)
+        pdf.multi_cell(0, 8, safe_text(reporte.analisis_de_riesgo))
         pdf.ln(5)
         
         # Justificación
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, "Justificacion del Protocolo", ln=True)
+        pdf.cell(0, 10, safe_text("Justificación del Protocolo"), ln=True)
         pdf.set_font("helvetica", "", 10)
-        pdf.multi_cell(0, 8, reporte.justificacion_protocolo)
+        pdf.multi_cell(0, 8, safe_text(reporte.justificacion_protocolo))
         pdf.ln(5)
         
         # Acciones Tácticas
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, "Acciones Tacticas Recomendadas", ln=True)
+        pdf.cell(0, 10, safe_text("Acciones Tácticas Recomendadas"), ln=True)
         pdf.set_font("helvetica", "", 10)
         for i, accion in enumerate(reporte.acciones_tacticas):
-            pdf.multi_cell(0, 8, f"{i+1}. {accion.accion}")
+            pdf.multi_cell(0, 8, safe_text(f"{i+1}. {accion.accion}"))
             if accion.fuente:
                 pdf.set_text_color(100, 100, 100)
-                pdf.multi_cell(0, 6, f"   Fuente: {accion.fuente}")
+                pdf.multi_cell(0, 6, safe_text(f"   Fuente: {accion.fuente}"))
                 pdf.set_text_color(0, 0, 0)
         
         # Usar la carpeta uploads que ya está mapeada en el servidor web (FastAPI static files)
@@ -98,7 +104,6 @@ class ReporteTecnicoUseCase:
         filename = f"reporte_{id_zona}_{int(datetime.now().timestamp())}.pdf"
         filepath = f"/app/uploads/reportes_pdf/{filename}"
         
-        # Codificar a latin-1 para FPDF básico (ignorando caracteres complejos si falla)
         pdf.output(filepath)
         
         return f"/uploads/reportes_pdf/{filename}"
