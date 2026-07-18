@@ -53,51 +53,58 @@ class ReporteTecnicoUseCase:
 
     def _generar_pdf(self, id_zona: str, reporte) -> str:
         pdf = FPDF()
+        pdf.set_margins(10, 10, 10)
+        pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
-        pdf.set_font("helvetica", "B", 16)
+        
+        epw = pdf.w - 20 # Ancho efectivo de la página
         
         # Helper interno para evitar caídas por acentos o comillas tipográficas del LLM
         def safe_text(texto):
             if not texto: return ""
-            return str(texto).encode('latin-1', 'replace').decode('latin-1')
+            # Reemplazar explícitamente algunos caracteres problemáticos comunes del LLM
+            t = str(texto).replace('"', '"').replace('"', '"').replace("'", "'").replace("'", "'").replace('—', '-')
+            return t.encode('latin-1', 'replace').decode('latin-1')
 
-        pdf.cell(0, 10, safe_text("Reporte Técnico de Protección Civil"), ln=True, align='C')
+        pdf.set_font("helvetica", "B", 16)
+        pdf.cell(epw, 10, safe_text("Reporte Técnico de Protección Civil"), new_x="LMARGIN", new_y="NEXT", align='C')
         
         pdf.set_font("helvetica", "", 10)
-        pdf.cell(0, 10, safe_text(f"Fecha de Emisión: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"), ln=True, align='R')
+        pdf.cell(epw, 10, safe_text(f"Fecha de Emisión: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"), new_x="LMARGIN", new_y="NEXT", align='R')
         pdf.ln(10)
         
         # Resumen Ejecutivo
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, safe_text("Resumen Ejecutivo"), ln=True)
+        pdf.cell(epw, 10, safe_text("Resumen Ejecutivo"), new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("helvetica", "", 10)
-        pdf.multi_cell(0, 8, safe_text(reporte.resumen_ejecutivo))
+        pdf.multi_cell(epw, 8, safe_text(reporte.resumen_ejecutivo))
         pdf.ln(5)
         
         # Análisis de Riesgo
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, safe_text("Análisis de Riesgo"), ln=True)
+        pdf.cell(epw, 10, safe_text("Análisis de Riesgo"), new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("helvetica", "", 10)
-        pdf.multi_cell(0, 8, safe_text(reporte.analisis_de_riesgo))
+        pdf.multi_cell(epw, 8, safe_text(reporte.analisis_de_riesgo))
         pdf.ln(5)
         
         # Justificación
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, safe_text("Justificación del Protocolo"), ln=True)
+        pdf.cell(epw, 10, safe_text("Justificación del Protocolo"), new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("helvetica", "", 10)
-        pdf.multi_cell(0, 8, safe_text(reporte.justificacion_protocolo))
+        pdf.multi_cell(epw, 8, safe_text(reporte.justificacion_protocolo))
         pdf.ln(5)
         
         # Acciones Tácticas
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, safe_text("Acciones Tácticas Recomendadas"), ln=True)
+        pdf.cell(epw, 10, safe_text("Acciones Tácticas Recomendadas"), new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("helvetica", "", 10)
         for i, accion in enumerate(reporte.acciones_tacticas):
-            pdf.multi_cell(0, 8, safe_text(f"{i+1}. {accion.accion}"))
+            pdf.multi_cell(epw, 8, safe_text(f"{i+1}. {accion.accion}"))
             if accion.fuente:
                 pdf.set_text_color(100, 100, 100)
-                pdf.multi_cell(0, 6, safe_text(f"   Fuente: {accion.fuente}"))
+                pdf.multi_cell(epw, 6, safe_text(f"   Fuente: {accion.fuente}"))
                 pdf.set_text_color(0, 0, 0)
+            pdf.ln(2)
         
         # Usar la carpeta uploads que ya está mapeada en el servidor web (FastAPI static files)
         os.makedirs("/app/uploads/reportes_pdf", exist_ok=True)
