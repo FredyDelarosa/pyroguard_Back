@@ -11,3 +11,4 @@ httpx
 requests
 fpdf2
 python-multipart
+firebase-admin

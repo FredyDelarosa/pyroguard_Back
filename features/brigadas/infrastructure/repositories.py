@@ -21,6 +21,9 @@ class BrigadaRepositoryImpl(BrigadaRepository):
     def get_all(self) -> List[BrigadaModel]:
         return self.db.query(BrigadaModel).order_by(BrigadaModel.creado_en.desc()).all()
         
+    def get_by_id(self, id_brigada: str) -> BrigadaModel:
+        return self.db.query(BrigadaModel).filter(BrigadaModel.id_brigada == id_brigada).first()
+        
     def assign_member(self, id_brigada: str, id_brigadista: str) -> bool:
         brigada = self.db.query(BrigadaModel).filter(BrigadaModel.id_brigada == id_brigada).first()
         

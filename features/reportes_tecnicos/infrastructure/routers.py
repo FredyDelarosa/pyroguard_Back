@@ -5,10 +5,15 @@ from core.db.connection import get_db
 from core.middleware.auth import require_role, UserContext
 from features.reportes_tecnicos.domain.entities import ReporteTecnicoSolicitar, ReporteTecnicoResponse, WebhookPayload
 from features.reportes_tecnicos.infrastructure.repositories import ReporteTecnicoRepositoryImpl
+from features.notificaciones.infrastructure.repositories import DeviceTokenRepositoryImpl
 from features.reportes_tecnicos.application.usecases import ReporteTecnicoUseCase
 
 router = APIRouter(tags=["Reportes Tecnicos (Modular)"])
-def get_usecase(db: Session = Depends(get_db)): return ReporteTecnicoUseCase(ReporteTecnicoRepositoryImpl(db))
+def get_usecase(db: Session = Depends(get_db)): 
+    return ReporteTecnicoUseCase(
+        ReporteTecnicoRepositoryImpl(db),
+        DeviceTokenRepositoryImpl(db)
+    )
 
 @router.post("/reportes_tecnicos/solicitar", response_model=ReporteTecnicoResponse)
 def solicitar_generacion(
