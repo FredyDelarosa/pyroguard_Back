@@ -19,7 +19,6 @@ __pycache__/
 # Archivos de la base de datos local (SQLite, si existiera alguna vez)
 *.db
 *.sqlite3
-*.sql
 
 # Almacenamiento de archivos (Los PDF generados no van a Git)
 storage/reportes_pdf/*
