@@ -51,4 +51,4 @@ class ComunicadoUseCase:
                 info = auth_client.get_user_info(m.id_autor)
                 if info: nombre = info.get("nombre")
             except: pass
-        return ComunicadoResponse(id_comunicado=m.id_comunicado, titulo=m.titulo, contenido=m.contenido, id_autor=m.id_autor, autor_nombre=nombre, fecha_publicacion=m.fecha_publicacion, fecha_vigencia=m.fecha_vigencia)
+        return ComunicadoResponse(id_comunicado=str(m.id_comunicado), titulo=m.titulo, contenido=m.contenido, id_autor=str(m.id_autor) if m.id_autor else None, autor_nombre=nombre, fecha_publicacion=m.fecha_publicacion, fecha_vigencia=m.fecha_vigencia)
