@@ -11,7 +11,7 @@ class AuthServiceClient:
     def get_user_info(self, user_id: str) -> Optional[Dict[str, Any]]:
         try:
             response = requests.get(
-                f"{self.base_url}/internal/users/{user_id}",
+                f"{self.base_url}/auth/internal/users/{user_id}",
                 headers=self.headers,
                 timeout=5
             )

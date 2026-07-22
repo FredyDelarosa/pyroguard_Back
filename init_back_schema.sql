@@ -67,6 +67,18 @@ CREATE TABLE Comunicados (
     fecha_vigencia TIMESTAMP NOT NULL
 );
 
+-- 6. Tabla de Reportes Técnicos Generados por Celery
+CREATE TABLE Reportes_Tecnicos (
+    id_reporte UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_zona UUID NOT NULL,
+    id_coordinador VARCHAR(36),
+    task_id VARCHAR(255),
+    estado VARCHAR(50) DEFAULT 'PROCESANDO',
+    nivel_riesgo_registrado VARCHAR(50),
+    archivo_pdf_path VARCHAR(255),
+    creado_en TIMESTAMP DEFAULT NOW()
+);
+
 -- Índices para mejorar rendimiento
 CREATE INDEX idx_intervenciones_zona ON Intervenciones(id_zona);
 CREATE INDEX idx_reportes_estado ON Reportes_Ciudadanos(estado);
