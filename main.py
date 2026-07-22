@@ -10,6 +10,7 @@ from features.intervenciones.infrastructure.models import IntervencionModel
 from features.observaciones.infrastructure.models import ObservacionCampoModel
 from features.reportes_ciudadanos.infrastructure.models import ReporteCiudadanoModel
 from features.reportes_tecnicos.infrastructure.models import ReporteTecnicoModel
+from features.notificaciones.infrastructure.models import DeviceTokenModel
 
 # Crear las tablas en la BD si no existen
 Base.metadata.create_all(bind=engine)
@@ -21,7 +22,9 @@ from features.intervenciones.infrastructure.routers import router as intervencio
 from features.observaciones.infrastructure.routers import router as observaciones_router
 from features.reportes_ciudadanos.infrastructure.routers import router as reportes_ciudadanos_router
 from features.reportes_tecnicos.infrastructure.routers import router as reportes_tecnicos_router
+from features.notificaciones.infrastructure.routers import router as notificaciones_router
 from core.routers import archivos
+from core.clients.implementations.firebase_client import firebase_client
 
 from fastapi.staticfiles import StaticFiles
 import os
@@ -52,7 +55,10 @@ app.include_router(intervenciones_router, prefix="/api/v1")
 app.include_router(observaciones_router, prefix="/api/v1")
 app.include_router(reportes_ciudadanos_router, prefix="/api/v1")
 app.include_router(reportes_tecnicos_router, prefix="/api/v1")
+app.include_router(notificaciones_router, prefix="/api/v1")
 app.include_router(archivos.router, prefix="/api/v1/archivos", tags=["Subida de Archivos"])
+
+firebase_client.initialize()
 
 os.makedirs("uploads", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")

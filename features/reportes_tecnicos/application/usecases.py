@@ -7,6 +7,8 @@ from features.reportes_tecnicos.domain.ports import ReporteTecnicoRepository
 from features.reportes_tecnicos.domain.entities import ReporteTecnicoSolicitar, ReporteTecnicoResponse, WebhookPayload
 from features.reportes_tecnicos.infrastructure.models import ReporteTecnicoModel
 from core.clients.implementations.auth_service_client import auth_client
+from features.notificaciones.domain.ports import DeviceTokenRepository
+from core.clients.implementations.firebase_client import firebase_client
 
 ML_SERVICE_URL = os.getenv("ML_SERVICE_URL", "http://pyroguard_ml_api:8000")
 BACKEND_WEBHOOK_URL = os.getenv("BACKEND_WEBHOOK_URL", "http://pyroguard_back:8001/api/v1/reportes_tecnicos/webhook")
@@ -168,8 +170,9 @@ class ReportePDF(FPDF):
         self.set_text_color(*self.COLORS["text"])
         self.set_xy(x, y + alto + 4)
 class ReporteTecnicoUseCase:
-    def __init__(self, repo: ReporteTecnicoRepository):
+    def __init__(self, repo: ReporteTecnicoRepository, token_repo: DeviceTokenRepository = None):
         self.repo = repo
+        self.token_repo = token_repo
 
     def solicitar_generacion(self, r: ReporteTecnicoSolicitar, id_coord: str) -> ReporteTecnicoResponse:
         payload = {
@@ -194,7 +197,16 @@ class ReporteTecnicoUseCase:
 
         pdf_path = self._generar_pdf(payload.id_zona, reporte_json, nivel_riesgo)
 
-        self.repo.update_completed(payload.task_id, pdf_path, nivel_riesgo)
+        reporte_db = self.repo.update_completed(payload.task_id, pdf_path, nivel_riesgo)
+        
+        if reporte_db and reporte_db.id_coordinador and getattr(self, 'token_repo', None):
+            token_model = self.token_repo.get_token(str(reporte_db.id_coordinador))
+            if token_model and token_model.fcm_token:
+                firebase_client.send_notification(
+                    token_model.fcm_token,
+                    "Reporte Técnico Generado",
+                    f"El reporte técnico que solicitaste ya está listo para descargarse en formato PDF."
+                )
 
     @staticmethod
     def _extraer_nivel_riesgo(analisis: str) -> str:

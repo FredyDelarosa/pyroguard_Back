@@ -13,5 +13,9 @@ class BrigadaRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_id(self, id_brigada: str) -> Optional[BrigadaModel]:
+        pass
+
+    @abstractmethod
     def assign_member(self, id_brigada: str, id_brigadista: str) -> bool:
         pass

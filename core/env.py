@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     AUTH_SERVICE_URL: str
     CRYPTO_SERVICE_URL: str
     API_KEY: str
+    FIREBASE_CREDENTIALS_PATH: str = ""
 
     # Cargar explícitamente desde el .env del backend
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')

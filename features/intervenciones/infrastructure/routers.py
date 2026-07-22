@@ -6,9 +6,16 @@ from core.middleware.auth import require_role, UserContext
 from features.intervenciones.domain.entities import IntervencionCreate, IntervencionUpdate, IntervencionResponse
 from features.intervenciones.infrastructure.repositories import IntervencionRepositoryImpl
 from features.intervenciones.application.usecases import IntervencionUseCase
+from features.brigadas.infrastructure.repositories import BrigadaRepositoryImpl
+from features.notificaciones.infrastructure.repositories import DeviceTokenRepositoryImpl
 
 router = APIRouter(tags=["Intervenciones (Modular)"])
-def get_usecase(db: Session = Depends(get_db)): return IntervencionUseCase(IntervencionRepositoryImpl(db))
+def get_usecase(db: Session = Depends(get_db)): 
+    return IntervencionUseCase(
+        IntervencionRepositoryImpl(db),
+        BrigadaRepositoryImpl(db),
+        DeviceTokenRepositoryImpl(db)
+    )
 
 @router.post("/intervenciones", response_model=IntervencionResponse)
 def crear(i: IntervencionCreate, usecase: IntervencionUseCase = Depends(get_usecase), current_user: UserContext = Depends(require_role(["Admin", "Coordinador"]))):
