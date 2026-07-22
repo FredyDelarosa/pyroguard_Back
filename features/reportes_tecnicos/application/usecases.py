@@ -10,8 +10,8 @@ from core.clients.implementations.auth_service_client import auth_client
 from features.notificaciones.domain.ports import DeviceTokenRepository
 from core.clients.implementations.firebase_client import firebase_client
 
-ML_SERVICE_URL = os.getenv("ML_SERVICE_URL", "http://pyroguard_ml_api:8000")
-BACKEND_WEBHOOK_URL = os.getenv("BACKEND_WEBHOOK_URL", "http://pyroguard_back:8001/api/v1/reportes_tecnicos/webhook")
+ML_SERVICE_URL = os.getenv("ML_SERVICE_URL", "http://pyroguard.inode.cloud/ml:8000")
+BACKEND_WEBHOOK_URL = os.getenv("BACKEND_WEBHOOK_URL", "http://pyroguard.inode.cloud/api:8001/api/v1/reportes_tecnicos/webhook")
 
 class ReportePDF(FPDF):
     """PDF con identidad visual propia para los reportes de Protección Civil."""
