@@ -239,8 +239,9 @@ class ReporteTecnicoUseCase:
         for i, accion in enumerate(acciones, start=1):
             pdf.accion_card(i, accion.accion, getattr(accion, "fuente", None))
 
+        import uuid
         os.makedirs("/app/uploads/reportes_pdf", exist_ok=True)
-        filename = f"reporte_{id_zona}_{int(datetime.now().timestamp())}.pdf"
+        filename = f"reporte_{id_zona}_{uuid.uuid4().hex[:8]}.pdf"
         filepath = f"/app/uploads/reportes_pdf/{filename}"
 
         pdf.output(filepath)
