@@ -37,12 +37,13 @@ CREATE TABLE Intervenciones (
 -- 3. Tabla de Observaciones de Campo (Por intervención)
 CREATE TABLE Observaciones_Campo (
     id_observacion UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    id_intervencion UUID REFERENCES Intervenciones(id_intervencion) ON DELETE CASCADE,
-    id_usuario UUID, -- Referencia al Auth Service
-    notas TEXT NOT NULL,
-    latitud DOUBLE PRECISION,
-    longitud DOUBLE PRECISION,
-    foto_url VARCHAR(255),
+    id_brigadista VARCHAR(36),
+    id_zona UUID NOT NULL,
+    latitud DOUBLE PRECISION NOT NULL,
+    longitud DOUBLE PRECISION NOT NULL,
+    condiciones VARCHAR(100) NOT NULL,
+    recursos_necesarios VARCHAR(255),
+    observaciones_texto TEXT,
     creado_en TIMESTAMP DEFAULT NOW()
 );
 
@@ -77,6 +78,12 @@ CREATE TABLE Reportes_Tecnicos (
     nivel_riesgo_registrado VARCHAR(50),
     archivo_pdf_path VARCHAR(255),
     creado_en TIMESTAMP DEFAULT NOW()
+);
+
+-- 7. Tabla de Tokens de Dispositivos (FCM Notificaciones)
+CREATE TABLE device_tokens (
+    id_usuario VARCHAR(36) PRIMARY KEY,
+    fcm_token VARCHAR(255) NOT NULL
 );
 
 -- Índices para mejorar rendimiento
