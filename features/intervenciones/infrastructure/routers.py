@@ -30,3 +30,10 @@ def actualizar(id: str, i: IntervencionUpdate, usecase: IntervencionUseCase = De
 @router.get("/intervenciones/zona/{id_zona}", response_model=List[IntervencionResponse])
 def historial(id_zona: str, limit: int = 5, usecase: IntervencionUseCase = Depends(get_usecase), current_user: UserContext = Depends(require_role(["Admin", "Coordinador", "Brigadista"]))):
     return usecase.historial_zona(id_zona, limit)
+
+@router.get("/intervenciones/mis-tareas/activas", response_model=List[IntervencionResponse])
+def mis_tareas(
+    usecase: IntervencionUseCase = Depends(get_usecase), 
+    current_user: UserContext = Depends(require_role(["Brigadista", "Coordinador", "Admin"]))
+):
+    return usecase.listar_mis_tareas(current_user.id_usuario)

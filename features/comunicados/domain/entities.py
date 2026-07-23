@@ -8,6 +8,11 @@ class ComunicadoCreate(BaseModel):
     contenido: str
     fecha_vigencia: datetime
 
+class ComunicadoUpdate(BaseModel):
+    titulo: Optional[str] = None
+    contenido: Optional[str] = None
+    fecha_vigencia: Optional[datetime] = None
+
 class EmergenciaCreate(BaseModel):
     id_zona: str
     mensaje_adicional: Optional[str] = None

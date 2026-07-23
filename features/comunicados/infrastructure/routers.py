@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from core.db.connection import get_db
 from core.middleware.auth import require_role, UserContext
-from features.comunicados.domain.entities import ComunicadoCreate, ComunicadoResponse, EmergenciaCreate
+from features.comunicados.domain.entities import ComunicadoCreate, ComunicadoResponse, EmergenciaCreate, ComunicadoUpdate
 from features.comunicados.infrastructure.repositories import ComunicadoRepositoryImpl
 from features.notificaciones.infrastructure.repositories import DeviceTokenRepositoryImpl
 from features.comunicados.application.usecases import ComunicadoUseCase
@@ -30,3 +30,21 @@ def declarar_emergencia(
     current_user: UserContext = Depends(require_role(["Admin"]))
 ):
     return usecase.declarar_emergencia(emergencia_in, current_user.id_usuario)
+
+@router.put("/comunicados/{id_comunicado}", response_model=ComunicadoResponse)
+def actualizar(
+    id_comunicado: str,
+    comunicado_in: ComunicadoUpdate,
+    usecase: ComunicadoUseCase = Depends(get_usecase),
+    current_user: UserContext = Depends(require_role(["Admin"]))
+):
+    return usecase.actualizar(id_comunicado, comunicado_in)
+
+@router.delete("/comunicados/{id_comunicado}")
+def eliminar(
+    id_comunicado: str,
+    usecase: ComunicadoUseCase = Depends(get_usecase),
+    current_user: UserContext = Depends(require_role(["Admin"]))
+):
+    usecase.eliminar(id_comunicado)
+    return {"status": "ok", "message": "Comunicado eliminado exitosamente"}

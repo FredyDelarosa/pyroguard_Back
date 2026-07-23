@@ -1,6 +1,7 @@
 from typing import List
 from features.comunicados.domain.ports import ComunicadoRepository
-from features.comunicados.domain.entities import ComunicadoCreate, ComunicadoResponse, EmergenciaCreate
+from features.comunicados.domain.entities import ComunicadoCreate, ComunicadoResponse, EmergenciaCreate, ComunicadoUpdate
+from fastapi import HTTPException
 from features.comunicados.infrastructure.models import ComunicadoModel
 from core.clients.implementations.auth_service_client import auth_client
 from features.notificaciones.domain.ports import DeviceTokenRepository
@@ -44,6 +45,18 @@ class ComunicadoUseCase:
         return self._build(m)
     def listar(self) -> List[ComunicadoResponse]:
         return [self._build(m) for m in self.repo.get_all()]
+
+    def actualizar(self, id_comunicado: str, comunicado_in: ComunicadoUpdate) -> ComunicadoResponse:
+        m = self.repo.update(id_comunicado, comunicado_in)
+        if not m:
+            raise HTTPException(status_code=404, detail="Comunicado no encontrado")
+        return self._build(m)
+
+    def eliminar(self, id_comunicado: str):
+        success = self.repo.delete(id_comunicado)
+        if not success:
+            raise HTTPException(status_code=404, detail="Comunicado no encontrado")
+
     def _build(self, m: ComunicadoModel) -> ComunicadoResponse:
         nombre = None
         if m.id_autor:
