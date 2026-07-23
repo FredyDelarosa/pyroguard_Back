@@ -24,3 +24,13 @@ class IntervencionRepositoryImpl(IntervencionRepository):
         return intervencion
     def get_by_zona(self, id_zona: str, limit: int) -> List[IntervencionModel]:
         return self.db.query(IntervencionModel).filter(IntervencionModel.id_zona == id_zona).order_by(IntervencionModel.fecha_asignacion.desc()).limit(limit).all()
+        
+    def get_by_brigadista(self, id_usuario: str) -> List[IntervencionModel]:
+        from features.brigadas.infrastructure.models import BrigadistaBrigadaModel
+        return self.db.query(IntervencionModel).join(
+            BrigadistaBrigadaModel, 
+            IntervencionModel.id_brigada == BrigadistaBrigadaModel.id_brigada
+        ).filter(
+            BrigadistaBrigadaModel.id_usuario == id_usuario,
+            IntervencionModel.estado != "Completada"
+        ).order_by(IntervencionModel.fecha_asignacion.desc()).all()

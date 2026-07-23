@@ -10,3 +10,5 @@ class IntervencionRepository(ABC):
     def update(self, id_int: str, int_in: IntervencionUpdate) -> IntervencionModel: pass
     @abstractmethod
     def get_by_zona(self, id_zona: str, limit: int) -> List[IntervencionModel]: pass
+    @abstractmethod
+    def get_by_brigadista(self, id_usuario: str) -> List[IntervencionModel]: pass

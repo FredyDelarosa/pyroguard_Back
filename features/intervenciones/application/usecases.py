@@ -56,3 +56,7 @@ class IntervencionUseCase:
         
     def historial_zona(self, id_zona: str, limit: int) -> List[IntervencionResponse]: 
         return [IntervencionResponse.model_validate(m) for m in self.repo.get_by_zona(id_zona, limit)]
+        
+    def listar_mis_tareas(self, id_usuario: str) -> List[IntervencionResponse]:
+        # Devuelve las intervenciones que no están completadas para el brigadista
+        return [IntervencionResponse.model_validate(m) for m in self.repo.get_by_brigadista(id_usuario)]
